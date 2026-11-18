@@ -15,9 +15,7 @@ export const obtenerDatosVisualizacion = async () => {
   });
 };
 
-// Función de procesamiento actualizada con lógica de filtrado dinámico
 export const procesarDatos = (datosCrudos, filtros) => {
-  // Aplicar filtros
   const datosFiltrados = datosCrudos.filter(item => {
     const coincideCategoria = filtros.categoria === 'todas' || item.categoria === filtros.categoria;
     const coincideAnio = !filtros.anio || item.anio.toString().includes(filtros.anio);
@@ -34,4 +32,16 @@ export const procesarDatos = (datosCrudos, filtros) => {
     promedio: promedio.toFixed(2),
     detalles: datosFiltrados,
   };
+};
+
+// Nueva función de mapeo requerida para la Práctica 5
+export const formatearParaGrafico = (datosCrudos) => {
+  if (!datosCrudos || datosCrudos.length === 0) {
+    return { labels: [], values: [] };
+  }
+
+  const labels = datosCrudos.map(item => item.categoria);
+  const values = datosCrudos.map(item => item.valor);
+
+  return { labels, values };
 };

@@ -5,6 +5,8 @@ import DashboardLayout from './components/DashboardLayout';
 import PanelFiltros from './components/PanelFiltros';
 import TarjetaMetrica from './components/TarjetaMetrica';
 import TablaDatos from './components/TablaDatos';
+import GraficoTendencia from './components/charts/GraficoTendencia';
+import GraficoComparativo from './components/charts/GraficoComparativo';
 import { obtenerDatosVisualizacion, procesarDatos } from './services/dataService';
 
 function App() {
@@ -16,7 +18,6 @@ function App() {
     detalles: []
   });
   
-  // Estado global de los filtros requerido por la Práctica 4
   const [filtros, setFiltros] = useState({
     categoria: 'todas',
     anio: ''
@@ -24,7 +25,6 @@ function App() {
 
   const [cargando, setCargando] = useState(true);
 
-  // 1. Carga inicial de datos al montar la aplicación
   useEffect(() => {
     const cargarDatosIniciales = async () => {
       try {
@@ -40,7 +40,6 @@ function App() {
     cargarDatosIniciales();
   }, []);
 
-  // 2. useEffect que "escucha" los cambios en el estado filtros en tiempo real
   useEffect(() => {
     if (datosCrudos.length > 0) {
       const resultadoFiltrado = procesarDatos(datosCrudos, filtros);
@@ -54,7 +53,7 @@ function App() {
       <DashboardLayout>
         <header style={{ marginBottom: '1.5rem', textAlign: 'center' }}>
           <h2>Dashboard Interactivo de Ciencia de Datos</h2>
-          <p style={{ color: '#94a3b8' }}>Filtrado simultáneo de métricas, gráficos y tablas en tiempo real.</p>
+          <p style={{ color: '#94a3b8' }}>Visualización avanzada y filtrado en tiempo real.</p>
         </header>
 
         {/* Panel de Filtros Interactivos */}
@@ -64,11 +63,17 @@ function App() {
           <p style={{ textAlign: 'center', color: '#38bdf8' }}>Cargando dashboard...</p>
         ) : (
           <>
-            {/* Tarjetas de Métricas Dinámicas */}
+            {/* Tarjetas de Métricas */}
             <section style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
               <TarjetaMetrica titulo="Registros Filtrados" valor={datosProcesados.totalRegistros} />
               <TarjetaMetrica titulo="Suma del Dataset" valor={datosProcesados.sumaValores} />
               <TarjetaMetrica titulo="Promedio Filtrado" valor={datosProcesados.promedio} />
+            </section>
+
+            {/* Sección de Gráficos Avanzados (Práctica 5) */}
+            <section style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+              <GraficoTendencia datos={datosProcesados.detalles} />
+              <GraficoComparativo datos={datosProcesados.detalles} />
             </section>
 
             {/* Tabla de Datos Dinámica */}
